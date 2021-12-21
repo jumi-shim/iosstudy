@@ -48,6 +48,7 @@ property, method로 데이터를 용도에 맞게 묶어 표현.
     - Xcode build Setting에서 확인 가능.
     - 모듈 전체를 하나의 덩어리로 컴파일 하여, internal level에 대해서 오버라이딩 되는지 안 되는지를 추론할 수 있게 되고 오버라이딩이 되지 않을 경우 내부적으로 final를 붙힘.
     
+
 [참고1](https://corykim0829.github.io/swift/Understanding-Swift-Performance/#)
 [참고2](https://onemoonstudio.tistory.com/7)
 [참고3](https://babbab2.tistory.com/145)
@@ -64,3 +65,12 @@ property, method로 데이터를 용도에 맞게 묶어 표현.
 항목별로 값을 가질수도, 가지지 않을 수도 있음.
 
 extension 이용 가능
+
+
+
+## Copy On Write (COW)
+
+실제 원본이나 복사본이 수정되기 전까지는 복사를 하지 않고 원본 리소스를 공유하고 원본이나 복사본에서 수정이 일어나면 그 때 복사하는 작업을 함. - Collection Type(Array Dictionary, Set)을 사용할 때
+
+- 그런데 ? collection type은 구조체이고, 구조체는 위에서 말했듯 value type이다. 그래서 만약 array A를 array B에 대입했다면 값이 복사가 되어야 한다. 하지만 COW 때문에 A와 B는 동일 메모리를 가르키고 있고 A와 B중에 수정이 일어나면 그 변수에 메모리를 새로 할당해 준다. -> 성능 상승. 
+
