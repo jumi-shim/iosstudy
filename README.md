@@ -74,3 +74,14 @@ extension 이용 가능
 
 - 그런데 ? collection type은 구조체이고, 구조체는 위에서 말했듯 value type이다. 그래서 만약 array A를 array B에 대입했다면 값이 복사가 되어야 한다. 하지만 COW 때문에 A와 B는 동일 메모리를 가르키고 있고 A와 B중에 수정이 일어나면 그 변수에 메모리를 새로 할당해 준다. -> 성능 상승. 
 
+
+
+## convenience init
+
+init(Designated init)은 클래스의 모든 프로퍼티가 초기화가 될 수 있도록 해야함.
+
+Convenience init은 Designated init을 자신 내부에서 실행하여 매개변수가 많아 외부에서 일일이 전달 인자를 전달하기 어렵거나 특정 목적으로 항상 같은 초기값으로 초기화 하고 싶을 경우에 씀.
+
+1. 자식클래스의 Designated init은 부모 클래스의 Designated init을 반드시 호출해야 함.
+2. Convenience init은 자신을 정의한 클래스의 다른 init을 반드시 호출해야 함.
+3. Convenience init은 궁극적으로 Designated init을 반드시 호출해야 함.
