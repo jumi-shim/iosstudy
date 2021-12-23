@@ -1,4 +1,4 @@
-# swiftstudy
+# swift
 
 ## struct VS class
 property, method로 데이터를 용도에 맞게 묶어 표현.
@@ -85,3 +85,61 @@ Convenience init은 Designated init을 자신 내부에서 실행하여 매개�
 1. 자식클래스의 Designated init은 부모 클래스의 Designated init을 반드시 호출해야 함.
 2. Convenience init은 자신을 정의한 클래스의 다른 init을 반드시 호출해야 함.
 3. Convenience init은 궁극적으로 Designated init을 반드시 호출해야 함.
+
+
+
+
+
+## Any, Any Object
+
+타입을 지정하지 않고 여러 타입의 값을 할당
+
+### Any
+
+함수 타입을 포함한 스위프트의 모든 데이터 타입 사용 가능.
+
+### Any Object
+
+클래스의 인스턴스만 할당할 수 있음.
+
+
+
+- 타입 캐스팅을 수행할 때 일반적으로 상속 관계에 있는 클래스끼리만 캐스팅이 가능하지만 Any, AnyObject는 상속 관계에 있지 않아도 타입 캐스팅을 할 수 있다.
+
+- Any, Any Object의 타입은 런타임 시점에 타입이 결정됨. -> 컴팡리 시점에 해당 타입에 대해 알 수 없기 때문에 해당 타입의 멤버에도 접근 불가. (ex: Any 타입에 String 타입을 할당해도 String 함수 쓰지 못함.) -> 다운캐스팅 사용
+
+
+
+
+
+# iOS
+
+## Frame vs Bounds
+
+- view의 위치와 크기 나타냄.
+- super view : 최상의 View인 루트 View가 아니라 __나의 한칸 윗 계층 View__
+
+### Frame 
+
+__super view 좌표계__에서 view의 위치와 크기를 나타냄
+
+- origin(x,y) : super view의 원점을 (0,0)으로 놓고 원점으로부터 얼마나 떨어져 있는지. super view 좌표계 (원점 : view의 가장 왼쪽, 가장 윗 부분) 
+- size(width,height) : view 영역을 모두 __감싸는__ 사각형으로 나타낸 것. view 자체의 크기가 아니라 view가 차지하는 영역을 감싸서 만든 사각형.
+
+
+
+### Bounds 
+
+__자신의 좌표계__에서 view의 위치와 크기를 나타냄
+
+- origin(x,y) : 자신의 원점을 (0,0)으로 놓음. 즉, (0,0)으로 초기화. bounds를 바꿔줘야 하는 경우(ex: ScrollView의 ContentOffset)에 사용.
+
+  만약 origin을 변경했다면 변경한 위치로 view를 이동시키는 것이 아니라 __viewport(핸드폰 화면에 보여지는 창)를 view 자체 좌표계에서 이동__한다는 것.
+
+- size(width, height) : view 자체의 영역. 감싼 X
+
+- view를 회전한 후 view의 실제 크기를 알고 싶을 때, view 내부에 그림을 그릴 때(drawRect), ScrollView에서 스크롤링 할 때 등에 사용.
+
+
+
+[참고](https://babbab2.tistory.com/45?category=831129)
