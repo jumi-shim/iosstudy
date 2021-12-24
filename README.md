@@ -140,6 +140,36 @@ __자신의 좌표계__에서 view의 위치와 크기를 나타냄
 
 - view를 회전한 후 view의 실제 크기를 알고 싶을 때, view 내부에 그림을 그릴 때(drawRect), ScrollView에서 스크롤링 할 때 등에 사용.
 
-
-
 [참고](https://babbab2.tistory.com/45?category=831129)
+
+
+
+## UIViewController
+
+UIKit앱의 View hierarchy 관리.
+
+View controller는 하나의 root view를 관리하고 이 root views는 subviews를 포함할 수 있음.
+
+__Content ViewController__와 __Container ViewController__가 있음.
+
+- View를 통해 사용자 상호 작용에 응답
+
+- 전체 인터페이스의 레이아웃을 관리
+
+- 앱에서 다른 ViewController를 포함한 다른 객체들과 조정
+
+- 데이터가 변경되면 뷰의 콘텐츠를 업데이트
+
+### Container ViewController
+
+하나 이상의 ViewController를 child ViewController로 관리하는 컨트롤러.
+
+Child ViewController에 속한 view들을 관리하지 않음.
+
+-> 왜 필요할까? Navigation 로직(라우팅)을 분리하여 단일 책임원칙을 지키기 위해. 
+
+ex : UITabBarController, UINavigationController, UIPageViewController 등.
+
+### Content ViewController
+
+화면을 구성하는 뷰를 직접 구현하고 관련된 이벤트를 처리하는 뷰 컨트롤러
