@@ -49,9 +49,7 @@ property, method로 데이터를 용도에 맞게 묶어 표현.
     - 모듈 전체를 하나의 덩어리로 컴파일 하여, internal level에 대해서 오버라이딩 되는지 안 되는지를 추론할 수 있게 되고 오버라이딩이 되지 않을 경우 내부적으로 final를 붙힘.
     
 
-[참고1](https://corykim0829.github.io/swift/Understanding-Swift-Performance/#)
-[참고2](https://onemoonstudio.tistory.com/7)
-[참고3](https://babbab2.tistory.com/145)
+[참고1](https://corykim0829.github.io/swift/Understanding-Swift-Performance/#) [참고2](https://onemoonstudio.tistory.com/7) [참고3](https://babbab2.tistory.com/145)
 
 ### struct 사용 권장 경우
 - 연관된 간단한 값의 집합을 캡슐화하는 것만이 목적일 때
@@ -112,6 +110,34 @@ Convenience init은 Designated init을 자신 내부에서 실행하여 매개�
 
 
 
+## Optionals
+
+값이 있을 수도, 없을 수도(nil) 있음을 나타내는 표현. 데이터 타입 뒤에 물음표(?)를 붙여 표현.
+
+enum. 제네릭이 적용된 열거형.
+
+swift의 안정성 제공. 프로그래머 간의 원활한 커뮤니케이션에 도움.
+
+- __옵셔널 바인딩__ : 옵셔널에 값이 있는지 확인할 때 사용
+
+  if, while 구문과 결합하여 사용. 옵셔널에서 추출한 값을 일정 블록 안에서 사용할 수 있는 상수나 변수로 할당해서 옵셔널이 아닌 형태로 사용.
+
+- __암시적 추출 옵셔널__ : nil을 할당해줄 수 있는 옵셔널이 아닌 변수나 상수
+
+  타입 뒤에 느낌표(!)
+
+  옵셔널 바인딩으로 매번 값을 추출하기 귀찮거나 로직상 nil 때문에 런타임 오류가 발생하지 않을 것 같다는 확신이 들 때 사용.
+
+- __옵셔널 체이닝__
+
+  옵셔널에 속해 있는 nil일지도 모르는 프로퍼티, 메서드, 서브스크립션 등을 가져오거나 호출할 때 사용할 수 있는 일련의 과정.
+
+  중첩된 옵셔널 중 하나라도 값이 존재하지 않으면 nil 반환.
+
+
+
+
+
 # iOS
 
 ## Frame vs Bounds
@@ -119,7 +145,7 @@ Convenience init은 Designated init을 자신 내부에서 실행하여 매개�
 - view의 위치와 크기 나타냄.
 - super view : 최상의 View인 루트 View가 아니라 __나의 한칸 윗 계층 View__
 
-### Frame 
+### ifFrame jIF
 
 __super view 좌표계__에서 view의 위치와 크기를 나타냄
 
@@ -173,3 +199,36 @@ ex : UITabBarController, UINavigationController, UIPageViewController 등.
 ### Content ViewController
 
 화면을 구성하는 뷰를 직접 구현하고 관련된 이벤트를 처리하는 뷰 컨트롤러
+
+
+
+
+
+## App thinning
+
+애플리케이션이 디바이스에 설치될 때, 앱 스토어와 운영체제가 디바이스의 특성에 맞게 설치되도록 하는 설치 최적화 기술. 최소한의 디스크 사용과 빠른 다운로드 제공 가능.
+
+슬라이싱(slicing), 비트코드(bitcode), 주문형 리소스(on-demand resource)
+
+### 슬라이싱(slicing)
+
+앱이 지원하는 여러 디바이스에 대해 애플리케이션 번들의 variants를 생성하고, 해당 디바이스에 가장 적합한 variant를 전달하는 기술. variants는 실행가능한 아키텍쳐, 리소스만 포함.
+
+개발자가 App Store connect에 업로드하면, 앱 스토어에서 디바이스 특성에 따라 다양한 버전의 조각들을 생성하면 사용자가 그 조각 중에서 가장 알맞은 app variant를 다운로드.
+
+Xcode는 개발 중 슬라이싱을 시뮬레이션하므로 앱의 variants를 만들고 테스트 가능.
+
+### 비트코드(bitcode)
+
+기계언어로 번역되기 이전 단계의 중간표현(Intermediate Representation). 현재 iOS에서는 옵션이나 기본 설정으로 되어 있으며, 개발자가 프로젝트 옵션에서 선택가능. 
+
+비트코드를 사용하여 업로드를 하면 애플이 애플리케이션을 재컴파일하여 앱 바이너리(app binary)를 생성. 비트코드를 사용하지 않으면, 모든 경우의 디바이스 경우에 따라 바이너리로 생성하여 합쳐져서 fat binary라는 것이 업로드되지만, 비트코드를 사용하면 필요 경우에 따라 재컴파일하게 되므로 여기에서 최적화 가능.
+
+### 주문형 리소스(on-demand resource)
+
+이미지나 사운드같은 리소스를 키워드로 태그할 수 있고 태그별로 그룹을 요청할 수 있음. 앱스토어는 apple 서버의 리소스를 호스팅하고 다운로드를 관리. 주문형 리소스를 분할시켜 앱의 변형을 최적화.
+
+필요할 때 다운받음. 예를 들어 사용자가 게임을 할 때 현재 레벨보다 상위레벨은 필요하지 않으므로 갖고 있을 필요가 없음. 사용자의 레벨이 필요할 때 다운로드 받는 것.
+
+[참고](https://zeddios.tistory.com/655)
+
