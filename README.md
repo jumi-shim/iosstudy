@@ -145,14 +145,12 @@ swift의 안정성 제공. 프로그래머 간의 원활한 커뮤니케이션�
 - view의 위치와 크기 나타냄.
 - super view : 최상의 View인 루트 View가 아니라 __나의 한칸 윗 계층 View__
 
-### ifFrame jIF
+### Frame
 
 __super view 좌표계__에서 view의 위치와 크기를 나타냄
 
 - origin(x,y) : super view의 원점을 (0,0)으로 놓고 원점으로부터 얼마나 떨어져 있는지. super view 좌표계 (원점 : view의 가장 왼쪽, 가장 윗 부분) 
 - size(width,height) : view 영역을 모두 __감싸는__ 사각형으로 나타낸 것. view 자체의 크기가 아니라 view가 차지하는 영역을 감싸서 만든 사각형.
-
-
 
 ### Bounds 
 
@@ -232,3 +230,28 @@ Xcode는 개발 중 슬라이싱을 시뮬레이션하므로 앱의 variants를 
 
 [참고](https://zeddios.tistory.com/655)
 
+
+
+## Cocoa Touch
+
+iOS 개발에 필요한 여러 프레임워크를 포함하고 있는 최상위 프레임워크
+
+Cocoa는 Objective-C 런타임을 기반으로하고, NSObject를 상속받는 모든 클래스 또는 객체를 가리킬 때 사용.
+
+Cocoa 또는 Cocoa Touch는 iOS 또는 macOS의 전반적인 기능을 활용해 애플리케이션을 제작할 때 사용하는 프레임워크
+
+UIKit, Foundation, CoreData, MapKit, CoreAnimation 등이 포함.
+
+### UIKit
+
+iOS 애플리케이션 사용자 인터페이스를 구현하고 이벤트를 관리하는 프레임워크
+
+제스처 처리, 애니메이션, 그림 그리기, 이미지 처리, 텍스트 처리 등 사용자 이벤트 처리를 위한 클래스를 포함.
+
+테이블뷰, 슬라이더, 버튼, 텍스트 필드 등 애플리케이션의 화면을 구성하는 요소 포함.
+
+UIKit 클래스 중 UIReponder에서 파생된 클래스나 사용자 인터페이스에 관련된 클래스는 애플리케이션의 메인 스레드 혹은 메인 디스패치 큐에서만 사용 가능.
+
+### Foundation
+
+원시 데이터 타입(String, Int, Double), 컬렉션 타입(Array, Dictionary, Set), 운영체제 서비스를 사용해 애플리케이션의 기본적인 기능을 관리하는 프레임워크.
