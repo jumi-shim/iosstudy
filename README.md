@@ -255,3 +255,33 @@ UIKit 클래스 중 UIReponder에서 파생된 클래스나 사용자 인터페�
 ### Foundation
 
 원시 데이터 타입(String, Int, Double), 컬렉션 타입(Array, Dictionary, Set), 운영체제 서비스를 사용해 애플리케이션의 기본적인 기능을 관리하는 프레임워크.
+
+### Core Data
+
+Persistence를 포함한 다양한 기능을 제공하는 Framework.
+
+In-memory 형태 -> 메모리에 로드된 객체에 대해서만 수정 가능.
+
+single thread 환경으로 thread-safe 하지 않음.
+
+- __Object-Oriented__
+
+  SQL을 쓸 일 없이 Object-Oriented 방식으로만 데이터를 다룰 수 있음. 데이터는 Object로 표현되며 NSManagedObjectModel의 인스턴스로 구현됨. 이러한 __Object가 관계를 형성하여 Object Graphs를 이루고 이를 관리하는 프레임워크가 Core Data.__
+
+  객체들이 할당되고 연결되었을 경우 한 객체에만 접근 가능하다면, 추가적인 Fetch 작업 없이 해당 객체로부터 나머지 연결된 객체들을 타고 넘어가며 접근 가능. -> 일단 데이터들이 메모리에 로딩되면 연결을 따라 이동하는 것은 검색없이 가능하기 때문에 searchless 특성.
+
+- __Map__
+
+  관계형 데이터베이스에서 처럼 객체나 변수를 mapping함. Core Data도 내부적으로는 SQL을 이용하여 데이터를 저장하지만, 개발자는 Xcode에 내장된 데이터 모델 에디터를 통해 데이터의 타입, 관계를 지정하고 코드로 관련 클래스를 수정할 수 있음. 
+
+[공식문서](https://developer.apple.com/documentation/coredata/)
+
+##### SQLite VS Core Data
+
+|                         |        SQLite        |      Core Data       |
+| ----------------------- | :------------------: | :------------------: |
+| 형태                    |    데이터 베이스     |     프레임 워크      |
+| 속도                    |         느림         |      속도 빠름       |
+| 메모리 및 저장공간 사용 |         적음         |         많음         |
+|                         | Lightweight solution | Complex object graph |
+
