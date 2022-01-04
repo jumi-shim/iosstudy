@@ -1,6 +1,6 @@
-# swift
+# 📕 swift
 
-## struct VS class
+## 🖌 struct VS class
 property, method로 데이터를 용도에 맞게 묶어 표현.
 - 서브스크립트 문법을 통해 구조체 또느 클래스가 갖는 프로퍼티에 접근하도록 서브스크립트 정의 가능
 - initializer 정의 가능
@@ -57,7 +57,7 @@ property, method로 데이터를 용도에 맞게 묶어 표현.
 - 구조체에 저장된 프로퍼티가 값 타입이며 참조하는 것보다 복사하는 것이 합당할 때
 - 다른 타입으로부터 상속받거나 자신을 상속할 필요가 없을 때
 
-## enum
+## 🖌 enum
 열거형. 연관된 항목들을 묶어서 표현할 수 있는 타입. 타입 분류!
 
 항목별로 값을 가질수도, 가지지 않을 수도 있음.
@@ -66,7 +66,7 @@ extension 이용 가능
 
 
 
-## Copy On Write (COW)
+## 🖌 Copy On Write (COW)
 
 실제 원본이나 복사본이 수정되기 전까지는 복사를 하지 않고 원본 리소스를 공유하고 원본이나 복사본에서 수정이 일어나면 그 때 복사하는 작업을 함. - Collection Type(Array Dictionary, Set)을 사용할 때
 
@@ -74,7 +74,7 @@ extension 이용 가능
 
 
 
-## convenience init
+## 🖌 convenience init
 
 init(Designated init)은 클래스의 모든 프로퍼티가 초기화가 될 수 있도록 해야함.
 
@@ -86,9 +86,7 @@ Convenience init은 Designated init을 자신 내부에서 실행하여 매개�
 
 
 
-
-
-## Any, Any Object
+## 🖌 Any, Any Object
 
 타입을 지정하지 않고 여러 타입의 값을 할당
 
@@ -108,9 +106,7 @@ Convenience init은 Designated init을 자신 내부에서 실행하여 매개�
 
 
 
-
-
-## Optionals
+## 🖌 Optionals
 
 값이 있을 수도, 없을 수도(nil) 있음을 나타내는 표현. 데이터 타입 뒤에 물음표(?)를 붙여 표현.
 
@@ -136,7 +132,7 @@ swift의 안정성 제공. 프로그래머 간의 원활한 커뮤니케이션�
 
 
 
-## Escaping Closure
+## 🖌 Escaping Closure
 
 함수의 인자로 전달된closure를  함수가 종료 후 실행할 수 있음.
 
@@ -152,11 +148,81 @@ swift의 안정성 제공. 프로그래머 간의 원활한 커뮤니케이션�
 
 
 
+## 🖌 ARC
+
+Automatic Reference Counting. 자동 메모리 관리 방식.
+
+더이상 필요하지 않은 클래스(참조 타입)의 인스턴스를 메모리에서 해제하는 방식으로 동작. 
+
+- 참조 카운팅 시점 : 컴파일 시
+- 장점 : 컴파일 당시 이미 인스턴스의 해제 시점이 정해져 있어 인스턴스가 언제 메모리에서 해제될지 예측할 수 있고 메모리 관리를 위한 시스템 자원을 추가할 필요가 없음.
+- 단점 : ARC의 자동 규칙을 모르고 사용하면 인스턴스가 메모리에서 영원히 해제되지 않을 가능성 있음.
+
+### 🖊 강한참조
+
+인스턴스를 다른 인스턴스의 프로퍼티나 변수, 상수 등에 할당할 때 강한참조를 사용하면 참조 횟수가 1 증가하고 nil을 할당해주면 원래 자신에게 할당되어 있던 인스턴스의 참조 횟수가 1 감소함.
+
+- 지역변수(상수)가 인스턴스를 참조하고있고 지역변수가 사용된 범위의 코드 실행이 종료되면 참조하고 있던 인스턴스의 참조 횟수가 1 감소함.
+
+- #### 강한참조 순환 문제
+
+  ```swift
+  class A {
+    var b: B ?
+    deinit {
+      print("a deinit")
+    }
+  }
+  class B {
+    var a: A?
+    deinit {
+      print("b deinit")
+    }
+  }
+  
+  var a1: A? = A()	//A 인스턴스의 참조 횟수 : 1
+  var b1: B? = B()	//B 인스턴스의 참조 횟수 : 1
+  a1?.b = b1 //B 인스턴스의 참조 횟수 : 2
+  b1?.a = a1 //A 인스턴스의 참조 횟수 : 2
+  a1 = nil // A 인스턴스의 참조 횟수 : 1
+  b2 = nil // B 인스턴스의 참조 횟수 : 1
+  // A 메모리를 해지하기 위해 A의 프로퍼티 b를 보니까 b는 B를 참조 중이고 B를 해지하려 보니까 B의 프로퍼티 a는 A를 참조중이고..~~~
+  //A와 B 인스턴스를 참조할 방법이 없음. 메모리에 잔존.
+  ```
 
 
-# iOS
 
-## Frame vs Bounds
+### 🖊 약한참조
+
+자신이 참조하는 인스턴스의 참조 횟수를 증가시키지 않음. 참조 타입의 프로퍼티나 변수의 선언 앞에 weak 키워드 써주면 됨. 
+
+자신이 참조하는 인스턴스가 메모리에서 해제될 수도 있다는 것을 예상해볼 수 있어야 함. 옵셔널 변수만 약한 참조 가능!! -> 참조 횟수를 증가시키지 않았기 때문에 그 인스턴스를 강한 참조하던 프로퍼티나 변수에서 참조 횟수를 감소시켜 0으로 만들면 메모리 해제되기 때문.
+
+```swift
+class B {
+  weak var a: A?	//B는 A에게 의존적이어서 A가 없으면 없어도 될 때..!!
+  deinit {
+    print("b deinit")
+  }
+}
+var a1: A? = A()	//A 인스턴스의 참조 횟수 : 1
+var b1: B? = B()	//B 인스턴스의 참조 횟수 : 1
+a1?.b = b1 //B 인스턴스의 참조 횟수 : 2
+b1?.a = a1 //A 인스턴스의 참조 횟수 : 1
+a1 = nil // A 인스턴스의 참조 횟수 : 0, B 인스턴스의 참조 횟수 : 1, a deinit
+print(b1?.a)	//nil
+b1 = nil //B 인스턴스의 참조 횟수 : 0, b deinit
+```
+
+
+
+
+
+
+
+# 📗 iOS 
+
+## 🖌 Frame vs Bounds
 
 - view의 위치와 크기 나타냄.
 - super view : 최상의 View인 루트 View가 아니라 __나의 한칸 윗 계층 View__
@@ -184,7 +250,7 @@ __자신의 좌표계__에서 view의 위치와 크기를 나타냄
 
 
 
-## UIViewController
+## 🖌 UIViewController
 
 UIKit앱의 View hierarchy 관리.
 
@@ -218,7 +284,7 @@ ex : UITabBarController, UINavigationController, UIPageViewController 등.
 
 
 
-## App thinning
+## 🖌 App thinning
 
 애플리케이션이 디바이스에 설치될 때, 앱 스토어와 운영체제가 디바이스의 특성에 맞게 설치되도록 하는 설치 최적화 기술. 최소한의 디스크 사용과 빠른 다운로드 제공 가능.
 
@@ -248,7 +314,7 @@ Xcode는 개발 중 슬라이싱을 시뮬레이션하므로 앱의 variants를 
 
 
 
-## Cocoa Touch
+## 🖌 Cocoa Touch
 
 iOS 개발에 필요한 여러 프레임워크를 포함하고 있는 최상위 프레임워크
 
@@ -303,9 +369,40 @@ single thread 환경으로 thread-safe 하지 않음.
 
 
 
-# Rx
+## 🖌 Delegate
 
-## Reactive Programming
+클래스 또는 구조체가 책임의 일부를 다른 유형의 인스턴스에 넘겨주거나 위임을 할 수 있도록 하는 디자인 패턴.
+
+위임된 기능을 제공하기 위해 준수 형식(대리자)이 보장되도록 위임된 책임을 캡슐화하는 프로토콜을 정의하여 구현됨.
+
+- 클래스에서 프로토콜을 채택할 때에는 Retain Cycle이 발생할 수 있기 때문에 weak 이용.
+
+  ```swift
+  protocol AClassDelegate:class{
+    func doSomething()
+  }
+  class AViewController:UIViewController {
+    weak var delegate:AClassDelegate?
+    func action(){
+      delegate?.doSomething()
+    }
+  }
+  class BViewController:UIViewController, AClassDelegate {
+    var aVC:AViewController?
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      aVC = AViewController()
+      aVC?.delegate = self
+    }
+    func doSomething() {
+    }
+  }
+
+
+
+# 📘 Rx
+
+## 🖌 Reactive Programming
 
 비동기적인 데이터 흐름(stream)을 처리하는 것. 
 
@@ -320,3 +417,8 @@ Reactive Programming은 하나의 패러다임일 뿐이므로 Rx를 사용하�
 - Observable
 - Operator
 - Scheduler
+
+
+
+
+
