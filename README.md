@@ -400,6 +400,48 @@ single thread 환경으로 thread-safe 하지 않음.
 
 
 
+## 🖌 URLSession
+
+iOS 앱에서 서버와 통신하기 위한 API.
+
+- Request
+
+  서버로 요청을 보낼 때 어떻게 데이터를 캐싱할 것인지, 어떤 http 메소드를 사용할 것인지, 어떤 내용을 전송할 것인지 등을 설정.
+
+  - URL 객체를 통해 직접 통신하는 형태
+  - URLRequest 객체를 만들어서 옵션을 설정하여 통신하는 형태
+
+- Response
+
+  - 설정된 Task의 Completion Handler 형태로 response를 받는 형태.
+
+  - URLSessionDelegate를 통해 지정된 메소드를 호출하는 형태로 response를 받는 형태.
+
+    앱이 background 상태로 들어갈 때에도 파일 다운로드를 지원하도록 설정하는 경우나 인증과 캐싱을 default 옵션으로 사용하지 않는 상황인 경우 등에서 delegate 패턴 사용.
+
+- Session
+
+  - Default Session : 기본적인 Session으로 디스크 기반 캐싱 지원
+  - Ephemeral Session : 어떠한 데이터도 저장하지 않는 형태의 세션.
+  - Background Session : 앱이 종료된 이후에도 통신이 이루어지는 것을 지원하는 세션
+
+- Task
+
+  Session 객체가 서버로 요청을 보낸 후, 응답을 받을 때 URL 기반의 내용들을 받는(retrieve) 역할. 
+
+  - Data Task : Data 객체를 통해 데이터를 주고 받는 Task. GET.
+  - Download Task : data를 파일의 형태로 전환 후 다운 받는 Task. 백그라운드 다운로드 지원.
+  - Upload Task : data를 파일의 형태로 전환 후 업로드 하는 Task. POST, PUT.
+
+- Life Cycle
+  1. Session configuration을 결정하고 Session을 생성한다.
+  2. 통신할 URL과 Request 객체를 설정한다.
+  3. 사용할 Task를 결정하고, 그에 맞는 Completion Handler나 Delegate 메소드들을 작성한다.
+  4. 해당 Task를 실행한다.
+  5. Task 완료 후 Completion Handler가 실행된다.
+
+
+
 # 📘 Rx
 
 ## 🖌 Reactive Programming
