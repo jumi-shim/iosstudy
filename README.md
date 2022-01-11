@@ -442,6 +442,28 @@ iOS 앱에서 서버와 통신하기 위한 API.
 
 
 
+## 🖌 Notification Center
+
+Observer pattern에서 observer를 등록하고, notification을 주는 역할만 빼서 추상화 레벨을 올린 구현체.
+
+기존의 Observer pattern에서는 Subject가 observer list를 관리하고 알림을 줄 일이 발생하면 직접 notification을 dispatch 했다면, 이제는 notification dispatch도 외주를 맡기는 셈.
+
+subject와 observer 둘 다 Notification Center에만 등록되어 있다면 그에 맞는 notification 발생시 Notification Center에서 그에 맞는 일을 알아서 해줌. 보통 백그라운드 작업의 결과, 비동기 작업의 결과 등 현재 작업의 흐름과 다른 흐르의 작업으로부터 이벤트를 받을 때 사용.
+
+- iOS's MVC pattern
+
+  Model: subject
+
+  View Controller: observer
+
+  model에 변화 -> view를 변화 일 때, view controller가 model의 변화 notification에 observer 등록하고, model에서 update가 생기면 post notification 하면 됨..!
+
+Single 프로그램 내에서만 notification 전송할 수 있으며 다른 프로세스로부터 notification 받으려면 DistributedNotificationCenter 이용.
+
+[참고1](https://developer.apple.com/documentation/foundation/notificationcenter), [참고2](https://daheenallwhite.github.io/ios/2019/10/13/Notification-Center/), [참고3](https://silver-g-0114.tistory.com/106)
+
+
+
 # 📘 Rx
 
 ## 🖌 Reactive Programming
@@ -463,4 +485,46 @@ Reactive Programming은 하나의 패러다임일 뿐이므로 Rx를 사용하�
 
 
 
+
+# 📙 Pattern
+
+## 🖌 Observer Pattern
+
+관찰 중인 객체에서 발생하는 이벤트를 여러 다른 객체에 알리는 메커니즘을 정의할 수 있는 패턴.
+
+다른 객체의 상태가 변경될 때마다 어떤 행동을 하고 싶을 때 사용.
+
+- __Subject (Publisher)__
+
+  - Observer들을 가지고 있으며 개수 제한 없음. Observer 추가, 제거 인터페이스 제공.
+
+- __Concrete Subject (Publisher)__
+
+  - Concrete Observer 객체의 상태 저장. 상태 변경되면 Observer (Subscriber)에게 알림.
+
+- __Observer (Subscriber)__
+
+  - 객체의 변경 사항을 알려야 하는 객체에 대한 Update 인터페이스 제공. 
+
+- __Concrete Observer (Subscriber)__
+
+  - Concrete Subject (Publisher) 객체에 대한 참조 유지.
+
+  - Subject (Publisher)의 상태와 일관성 유지.
+
+  - 객체의 상태와 일관성을 유지하기 위해 update 인터페이스 구현.
+
+- 장점
+
+  - Open / Close 원칙을 지킬 수 있음. Subject(Publisher)의 코드를 수정하지 않고 새로운 Observer(Subscriber) 클래수 추가 가능.
+
+  - 런타임에서 각체간 관계 설정 가능.
+
+- 단점
+
+  - Observer(Subscriber)에게 알림이 가는 순서 보장하지 않음.
+
+  - Observer, Subject의 관계가 잘 정의되지 않으면 원하지 않는 동작이 발생할 수도 있음.
+
+[참고](https://icksw.tistory.com/257)
 
