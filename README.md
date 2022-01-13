@@ -464,6 +464,43 @@ Single 프로그램 내에서만 notification 전송할 수 있으며 다른 프
 
 
 
+## 🖌 Key Chain
+
+Key Chain은 디바이스 안에 암호된 데이터 저장 공간 의미. 사용자는 암호화된 공간에 데이터를 안전하게 보관 가능.
+
+로그인 및 암호(해시), 결제 데이터, 알고리즘 암호화를 위한 키 등 저장.
+
+- 사용자가 직접 제거하지 않는 이상 앱을 제거하고 설치해도 데이터는 남아있음.
+  - KeyChain의 위치는 Sandbox. Sandbox는 외부에서 받은 파일을 그 자리에서 실행하지 않고 보호된 영역에서 실행시켜 잘못된 파일과 프로그램이 내부 시스템에 악영향 주는 것 방지.
+- 디바이스를 lock 하면 KeyChain도 잠기고, 디바이스를 Unlock하면 KeyChain 풀림.
+  - KeyChain 잠긴 상태, Item 들에 접근할 수도 복호화 할 수도 없음.
+  - KeyChain이 풀린 상태, 해당 Item을 생성하고 저장한 어플리케이션에서만 접근 가능.
+- app은 자신의 KeyChain에만 접근할 수 있으며 같은 개발자가 개발한 여러 앱에서 키체인 정보 공유할 수 있음.
+
+- __KeyChain Service API__
+
+  민감한 데이터를 암호화, 복호화 하며 재사용 하는 행위를 쉽고 안전하게 사용할 수 있게 함.
+
+- __KeyChain Item__
+
+  데이터를 Attributes와 함께 Item으로 KeyChain에 저장.
+
+- __KeyChain Item Class__
+
+  - kSecClassInternetPassword : 인터넷 암호 항목
+  - kSecClassCertificate : 인증서 항목
+  - kSecClassGenericPassword : 일반 암호 항목
+    - kSecAttrService : 공개키
+    - kSecAttrAccount : 개인키
+  - kSecClassIdentitiy : ID 항목
+  - KSecClassKey : 암호화 키 항목
+
+User Defaults에도 데이터를 쉽게 저장할 수 있지만, 단순히 .info 파일에 키-값 쌍을 텍스트 형태로 저장하기 때문에 OS를 탈옥하면 내용물을 볼 수 있다는 문제.
+
+
+
+
+
 # 📘 Rx
 
 ## 🖌 Reactive Programming
