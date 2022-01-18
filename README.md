@@ -628,3 +628,44 @@ Model - View - Controller
 
 ## 🖌 MVVM
 
+Model - View - ViewModel![스크린샷 2022-01-18 오전 1.36.41](/Users/simjumi/Library/Application Support/typora-user-images/스크린샷 2022-01-18 오전 1.36.41.png)
+
+- **Model**
+
+  데이터 담는 구조체. 네트워크 로직. JSON 파싱 코드 등
+
+- **View**
+
+  UI에 대한 코드. View의 각 컴포넌트에 대한 정보(재사용성 강조). 어느 위치에 어떻게 배치 될 지 등.
+
+  ViewModel로부터 데이터를 가져와 어떻게 배치할지. 상황에 따라 ViewModel의 어떤 메서드를 이용할지. 
+
+- **ViewModel**
+
+  앱의 핵심적인 비즈니스 로직. MVC 패턴의 Controller와 비슷한 역할. View로부터 전달받는 요청을 해결할 비즈니스 로직. UI 관련 코드로부터 완전히 분리. 
+
+1. 사용자가 화면에서 Action을 취하면 **Command Pattern**으로 View -> ViewModel로 전달됨.
+2. ViewModel이 Model에게 data 요청.
+3. Model은 요청받은 data를 통해 update된 data를 ViewModel로 전달함.
+4. ViewModel은 응답받은 데이터를 가공해서 저장.
+5. View는 ViewModel과의 **Data Binding**을 통해서 자동으로 갱신.
+
+- **Command Pattern?**
+
+  실행될 기능을 추상화, 캡슐화하여 한 클래스에서 여러 기능을 실행할 수 있도록 하는 패턴.
+
+- **Data Binding?**
+
+  view와 로직이 분리되어 있어도 한 쪽이 바뀌면 다른 쪽도 업데이트가 이루어 지는 것.
+
+  - KVO
+  - Delegation
+  - Functional Reactive Programming
+  - Property Observer
+
+- 특징
+
+  유지보수에 좋음. 자동화된 테스팅에 적합한 모델 (View Model과 View 간의 의존성이 없기 때문)
+
+[참고](https://medium.com/hcleedev/ios-swiftui의-mvvm-패턴과-mvc와의-비교-8662c96353cc)
+
