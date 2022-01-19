@@ -628,7 +628,9 @@ Model - View - Controller
 
 ## 🖌 MVVM
 
-Model - View - ViewModel![스크린샷 2022-01-18 오전 1.36.41](/Users/simjumi/Library/Application Support/typora-user-images/스크린샷 2022-01-18 오전 1.36.41.png)
+Model - View - ViewModel  
+
+![스크린샷 2022-01-18 오전 1.36.41](/Users/simjumi/Library/Application Support/typora-user-images/스크린샷 2022-01-18 오전 1.36.41.png)
 
 - **Model**
 
