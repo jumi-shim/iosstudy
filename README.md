@@ -216,9 +216,63 @@ b1 = nil //B 인스턴스의 참조 횟수 : 0, b deinit
 
 
 
+## 🖌 Generic 제네릭
 
+제네릭을 이용하면 타입에 유연하게 대응 가능. 제네릭으로 구현한 기능과 타입은 재사용이 쉽고 코드의 중복을 줄일 수 있음. 실제 타입 이름(Int, Stirng)을 쓰는 것 대신 플레이스홀더 사용.
 
+- 제네릭 함수
 
+  ```swift
+  func swapTwoValues<T>(_ a: inout T, _ b: inout T) { // a, b는 같은 타입. T의 타입은 함수가 호출되는 순간 결정.
+    let temporaryA: T = a
+    a = b
+    b = temporaryA
+  }
+  ```
+
+- 제네릭 타입
+
+  ```swift
+  struct Stack<Element> {
+    var items = [Element]()
+    mutating func push(_ item: Element){
+      items.append(item)
+    }
+    mutating func pop() -> Element {
+      items.removeLast()
+    }
+  }
+  var intStack: Stack<Int> = Stack<Int>() //정해준 타입에서만 동작 -> 안전
+  ```
+
+  - extension으로 제네릭 타입에 기능 추가
+
+    ```swift
+    extension Stack {
+      var topElement: Element? {	//기존 제네릭 타입에 정의된 Element 이용.
+        return self.items.last
+      }
+    }
+    ```
+
+- 타입 제약
+
+  타입이 특정 프로토콜이나 클래스를 따르는 타입만 사용할 수 있도록 제약. 
+
+  열거형, 구조체 등의 타입은 타입 제약의 타입으로 사용 불가.
+
+  ```swift
+  public struct Dictionary<Key: Hashable, Value> : Collection, ExpressibleByDictionaryLiteral { }
+  //Hashable 프로토콜을 준수하는 Key. 
+  ```
+
+  여러 제약을 주고싶으면 where 절 사용.
+
+- 프로토콜 Associated 연관 타입
+
+  프로토콜에서 사용할 수 있는 플레이스 홀더이름. associatedtype 이용.
+
+  
 
 # 📗 iOS 
 
