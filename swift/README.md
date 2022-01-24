@@ -1,4 +1,4 @@
-# 📕 swift
+# 📍 swift
 
 ## 🖌 struct VS class
 property, method로 데이터를 용도에 맞게 묶어 표현.
@@ -213,6 +213,11 @@ a1 = nil // A 인스턴스의 참조 횟수 : 0, B 인스턴스의 참조 횟수
 print(b1?.a)	//nil
 b1 = nil //B 인스턴스의 참조 횟수 : 0, b deinit
 ```
+
+- **weak self** 언제 사용?
+  - escaping closure 안에서 지연할당의 가능성이 있는 경우 (API 비동기 데이터 처리, 타이머 등). escaping closure가 아닌 경우에서는 scope 안에서 즉시 실행되므로 강한참조 유발하지 않음.  
+    - closure 내부에서 guard를 이용하여 self를 임시적으로 강한참조로 가지고 있을 수 있음.
+  - closure가 객체에 대한 지연 deadlocation 가능성이 있는 경우
 
 
 

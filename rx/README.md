@@ -246,3 +246,135 @@ RxCocoa.
   ```
 
   
+## 🖌 Filtering Operators
+
+- **IgnoreElements** : source observable에서 방출되는 요소는 무시하고 onError, onCompleted만 허용.
+
+  ```swift
+  let strikes = PublishSubject<String>()
+  let disposeBag = DisposeBag()
+  strikes
+      .ignoreElements()
+      .subscribe({ _ in
+          print("subscription")
+      })
+      .disposed(by: disposeBag)
+  strikes.onNext("A")
+  strikes.onNext("B")
+  strikes.onCompleted()
+  //subscription
+  ```
+
+- **ElementAt** : source observable에서 방출되는 요소 중 n번재 요소만 받음.
+
+  ```swift
+  let strikes = PublishSubject<String>()
+  let disposeBag = DisposeBag()
+  strikes
+      .elementAt(2)
+      .subscribe(onNext: { _ in 
+          print("out")
+      })
+      .disposed(by: disposeBag)
+  strikes.onNext("X")
+  strikes.onNext("X")
+  strikes.onNext("X")
+  // out (2번째 이벤트)
+  ```
+
+- **Filter**
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(1,2,3,4)
+      .filter{ $0 % 2 == 0}
+      .subscribe(onNext: {
+        print($0)
+      }).disposed(by: disposeBag)
+  // 2, 4
+  ```
+
+- **Skip** : 처음 n개 요소는 skip.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of("A","B","C","D")
+      .skip(2)
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  // C, D
+  ```
+
+- **SkipWhile** : 조건이 처음으로 false일 때부터 요소 받음.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(2,2,3,4,4)
+      .skipWhile{ $0 % 2 == 0 }
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  //3, 4, 4
+  ```
+
+- **SkipUntil** : trigger에서 이벤트 발생까지 subject의 이벤트 skip
+
+  ```swift
+  let disposeBag = DisposeBag()
+  let subject = PublishSubject<String>()
+  let trigger = PublishSubject<String>()
+  
+  subject.skipUntil(trigger)
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  subject.onNext("A")
+  subject.onNext("B")
+  trigger.onNext("X")
+  subject.onNext("C")
+  //C
+  ```
+
+- **Take** : 처음 발생하는 n개의 이벤트만 받음.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(1,2,3,4)
+      .take(3)
+      .subscribe(onNext: {
+          print("$0")
+      }).disposed(by: disposeBag)
+  //1,2,3
+  ```
+
+- **TakeWhile** : 조건이 처음으로 false일 때 전까지만 이벤트 받음.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(2,4,5,6,8)
+      .takeWhile{ $0 % 2 == 0}
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  // 2, 4
+  ```
+
+- **TakeUntil** : trigger에서 이벤트 발생 전까지 subject 이벤트 받음.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  let subject = PublishSubject<String>()
+  let trigger = PublishSubject<String>()
+  subject.takeUntil(trigger)
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by:disposeBag)
+  subject.onNext("A")
+  subject.onNext("B")
+  trigger.onNext("X")
+  subject.onNext("C")
+  //A, B
+  ```
+
+  
