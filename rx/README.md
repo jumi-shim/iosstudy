@@ -15,3 +15,130 @@ Reactive Programming은 하나의 패러다임일 뿐이므로 Rx를 사용하�
 - Observable
 - Operator
 - Scheduler
+
+
+
+## 🖌  Observable
+
+이벤트를 비동기적으로 생성할 수 있는 대상. 계속해서 이벤트를 생성하는데 이러한 과정을 Emit이라 함.
+
+observable == observable sequence == sequence
+
+이벤트들은 숫자나 커스텀한 인스턴스 등과 같은 값을 가질 수 있고, 탭과 같은 제스처일 수도 있음.
+
+- **next**
+
+  요소들을 계속해서 방출. Observable 구독자에게 데이터 전달.
+
+- **Completed**
+
+  요소들이 다 방출되면 이벤트 종료. Observable 구독자에게 완료되었음을 알림.
+
+- **error**
+
+  방출한 요소에 에러가 있음을 알고 중간에 종료. Observable 구독자에게 오류 알림.
+
+### Observable 생성
+
+- **just** : 오직 하나의 Element를 포함하는 Observable Sequence 생성
+
+  ```swift
+  let observable: Observable<Int> = Observable<Int>.just(1)
+  ```
+
+- **of** : 가변적인 element를 포함하는 Observable Sequence 생성
+
+  ```swift
+  let observable1 = Observable.of(1,2,3,4,5)	//배열 아님. Int 타입.
+  let observable2 = Observable.of([1,2,3])	//인자가 배열일 때는 단일요소. <[Int]>
+  ```
+
+- **from** : 배열 요소들로 Observable Sequence 생성
+
+  ```swift
+  let observable = Observable.from([1,2,3,4,5])	//Int 타입. 
+  ```
+
+- **empty** : 요소를 가지지 않는 Observable. `.completed` 이벤트만 방출.
+
+  ```swift
+  let observable = Observable<Void>.empty() //Observable은 반드시 특정 타입이 정의되어야 하는데 타입 추론이 불가능하므로 Void.
+  ```
+
+- **never** : 이벤트 방출 조차 하지 않음.
+
+  ```swift
+  let observable = Observable<Any>.never()
+  ```
+
+- **range** : start부터 count 크기 만큼의 값을 갖는 Observable 생성.
+
+  ```swift
+  let observable = Observable<Int>.range(start: 2, count: 3) //2, 3, 4
+  ```
+
+- **repeatElement** : 지정된 element 계속 방출.
+
+  ```swift
+  let observable = Observable<Int>.repeatElement(2) //2, 2, 2 ..
+  ```
+
+- **interval** : 지정된 시간에 한번씩 이벤트 방출
+
+  ```swift
+  Observable<Int>.interval(2, scheduler: MainScheduler.instance) // 0, 1, 2, .. (2초마다 0부터 증가)
+  ```
+
+- **create** : Observer에 직접 이벤트 방출
+
+  ``` swift
+  Observable<Int>.create({ (observer) -> Disposable in 
+      observer.onNext(2)
+      observer.onCompleted()
+      observer.onNext(3)
+      return Disposables.create()
+  }) // next(2), completed
+  ```
+
+
+
+### Observable 구독 - subscribe
+
+Observable이 구독되어야지 이벤트를 보냄. subscribe 사용.
+
+```swift
+let observable = Observable.of(1, 2, 3)
+observable.subscribe { event in 
+    print(event) // next(1), next(2), next(3), completed
+}
+observable.subscribe(onNext: { element in 
+    print(element) // 1, 2, 3
+})
+```
+
+
+
+### Observable 구독 취소 - Disposing
+
+- **dispose**
+
+  ```swift
+  let subscription = observable.subscribe({ (event) in 
+      print(event)
+  }) // 만약 이벤트가 무한대가 있다면 일정 수준에서 dispose -> completed
+  subscription.dispose()
+  ```
+
+- **DisposeBag** : dispose 반환 값 담는 객체
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(1,2,3)
+      .subscribe {
+          print($0)
+      }
+      .disposed(by: disposeBag)
+  ```
+
+  
+
