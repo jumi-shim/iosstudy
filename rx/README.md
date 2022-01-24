@@ -142,3 +142,107 @@ observable.subscribe(onNext: { element in
 
   
 
+## 🖌 Subject
+
+observable과 observer의 역할을 모두 할 수 있는 bridge/proxy Observable. -> emit, subscribe 가능.
+
+- Subject : multicast. 여러개의 observer를 subscribe 가능.
+
+  state를 가지며 data를 메모리에 저장. 관찰자 세부 정보를 저장하고 코드를 **한 번만 **실행하여 모든 관찰자에게 결과 제공.
+
+  observable을 생성하고 관찰할 수 있음 -> data producer, consumer.
+
+  자주 데이터를 저장하고 수정할 때, 여러개의 observer가 데이터를 관찰해야 할 때, observer와 observable 사이 proxy 역할.
+
+- observer : unicast. 하나의 observer만 subscribe. 
+
+  하나의 함수로 어떠한 상태도 가지지 않음. 모든 새로운 Observer에 대해 관찰 가능한 create 코드를 반복 실행. 코드는 각 관찰자에 대해 실행되므로 HTTP 호출인 경우 각 관찰자에 대해 호출 -> 버그, 비효율
+
+  하나의 옵저버에 대한 간단한 observable이 필요할 때.
+
+[참고](https://sujinnaljin.medium.com/rxswift-subject-99b401e5d2e5)
+
+- **Publish Subject**
+
+  Element 없이 빈 상태로 생성. subscriber는 subscribe 한 시점 이후에 발생되는 이벤트만 전달 받음.
+
+  ```swift
+  let subject = PublishSubject<Int>()
+  subject.onNext(1)
+  subject.subscribe { event in 
+      print(event)
+  }
+  subject.onNext(2)
+  subject.onNext(3)
+  subject.onCompleted()
+  subject.onNext(4)
+  // onNext(2), onNext(3), completed
+  ```
+
+- **Behavior Subject**
+
+  subscribe가 발생하면 발생 시점 이전에 발생한 이벤트 중 가장 최신 이벤트를 전달 받음. -> 초기값 필요
+
+  ```swift
+  let subject = BehaviorSubject(value: "Inital Value")
+  subject.onNext("Last Issue")
+  subject.subscribe{ event in 
+      print(event)
+  }
+  subject.onNext("1")
+  //next(Last Issue), next(1)
+  ```
+
+- **Replay Subject**
+
+  BufferSize와 함께 생성. Buffer Size 만큼의 최신 이벤트를 전달 받음.
+
+  ```swift
+  let subject = ReplaySubject<String>.create(bufferSize: 2)
+  subject.onNext("1")
+  subject.onNext("2")
+  subject.onNext("3")
+  subject.subscribe{ print($0) }	//next(2), next(3), next(4), next(5), next(6)
+  subject.onNext("4")
+  subject.onNext("5")
+  subject.onNext("6")
+  subject.subscribe{ print($0) } // next(5), next(6)
+  ```
+
+- **Variable** -> Deprecate. Behavior Relay 사용.
+
+  BehaviorSubject의 Wrapper.
+
+  ```swift
+  let variable = Variable([String]())
+  variable.value.append("1")
+  variable.asObservable()
+      .subscribe {
+        print($0)
+      }
+  variable.value.append("2")
+  //next(["1"]), next(["1","2"])
+  ```
+
+
+
+## 🖌 Relay
+
+RxCocoa.
+
+- **Behavior Relay**
+
+  Behavior Subject의 Wrapper 클래스.
+
+  ```swift
+  let relay = BehaviorRelay(value: ["1"])
+  var value = relay.value
+  value.append("2")
+  relay.accept(value)
+  
+  relay.asObservable()
+      .subscribe {print($0)}
+  //next(["1","2"])
+  ```
+
+  
