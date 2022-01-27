@@ -278,3 +278,53 @@ b1 = nil //B 인스턴스의 참조 횟수 : 0, b deinit
   프로토콜에서 사용할 수 있는 플레이스 홀더이름. associatedtype 이용.
 
   
+
+## 🖌 Subscript
+
+클래스, 구조체, 열거형에는 컬렉션, 리스트, 시퀀스 등 집합 특정 멤버 요소에 접근하는 단축 문법. -> ex: arr[index], dict[key]
+
+별도의 Setter나 Getter를 사용하지 않고 인덱스를 통해 값을 설정하거나 가져올 수 있음.
+
+```swift
+subscript(index: Int) -> Int {
+  get {
+    //반환값
+  }
+  set(newValue) {
+    //설정자 역할 수행
+  }
+}
+```
+
+- set에 대한 인자 값을 따로 지정하지 않으면 기본값으로 newValue 사용.
+
+- read-write와 read only만 가능.
+
+  read only는 따로 지정하지 않으면 get으로 동작.
+
+  ```swift
+  subscript(index: Int) -> Int {
+    //반환 값
+  }
+  ```
+
+  ```swift
+  struct TimesTable {
+    let multiplier: Int
+    subscript(index: Int) -> Int {
+      return multiplier*index
+    }
+  }
+  let threeTimesTable = TimesTable(multiplier: 3)
+  print(threeTimesTable[6]) 	// 18
+  ```
+
+- 입력 인자의 숫자에 제한이 없고 입력 인자의 타입과 반환 타입의 제한도 없음. in-out parameter, default parameter value를 제공할 수는 없음.
+
+### String이 subscript가 안되는 이유는?
+
+String은 struct 타입. Characters의 collection.
+
+String에 접근할 때에는 String.index로 접근해야 함.
+
+Character는 1개 이상의 Unicode Scalar로 이루어져 있기 때문. -> 크기 가변적.

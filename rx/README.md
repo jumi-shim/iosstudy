@@ -378,3 +378,89 @@ RxCocoa.
   ```
 
   
+
+## 🖌 Transforming Operators
+
+- **ToArray** : 하나의 요소를 방출하는 Observable로 변환. 더이상 요소를 방출하지 않는 시점에 배열에 담아 전달.
+
+  ```swift
+  let disposeBag = DisposeBag()
+  Observable.of(1,2,3)
+      .toArray()
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  //[1,2,3]
+  ```
+
+  ```swift
+  let subject = PublishSubject<Int>()
+  subject.toArray()
+      .subscribe{ print($0) }
+      .disposed(by: disposeBag)
+  subject.onNext(1)
+  subject.onNext(2)
+  subject.onNext(3)
+  subject.onCompleted()
+  //[1,2,3]
+  ```
+
+- **Map**
+
+  ```swift
+  Observable.of(1,2,3)
+      .map{
+          return $0*2
+      }.subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  //2, 4, 6
+  ```
+
+  
+
+- **Flat Map** : 이벤트를 다른 observable로 만들고 만들어진 observable에서 요소 방출. 하나의 sequence로 전달.
+
+  ```swift
+  let Student {
+      var score: BehaviorRelay<Int>
+  }
+  let a = Student(score: BehaviorRelay(value: 75))
+  let b = Student(score: BehaviorRelay(value: 95))
+  
+  let student = PublishSubject<Student>()
+  student.asObservable()
+      .flatMap{ $0.score.asObservable }
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  
+  student.onNext(a)
+  a.score.accept(100)
+  student.onNext(b)
+  b.score.accept(80)
+  a.score.accept(40)
+  // 75, 100, 95, 80, 40
+  ```
+
+  [참고](https://eunjin3786.tistory.com/41)
+
+- **Flat Map Lastest** : 마지막 observable만 관찰.
+
+  ```swift
+  student.asObservable()
+      .flatMapLastest{ $0.score.asObservable() }
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  
+  student.onNext(a)
+  a.score.accept(100)
+  student.onNext(b)
+  b.score.accept(80)
+  a.score.accept(40)	//x
+  //75, 100, 95, 80
+  ```
+
+  
+
