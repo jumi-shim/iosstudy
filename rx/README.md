@@ -464,3 +464,113 @@ RxCocoa.
 
   
 
+## 🖌 Combining Operator
+
+- **StartWith** : 요소들을 방출하기 전 특정 요소를 먼저 방출.
+
+  ```swift
+  let numbers = Observable.of(2, 3)
+  let observable = numbers.startWith(1)
+  observable.subscribe(onNext: {
+      print($0)
+  }).disposed(by: disposeBag)
+  //1, 2, 3
+  ```
+
+- **Concat** : 두개의 observable 연결. 하나의 Observable 방출이 Completed되면 이어지는 Observable 방출.
+
+  ```swift
+  let first = Observable.of(1, 2)
+  let second = Observable.of(3, 4)
+  let observable = Observable.concat([first, second])
+  observable.subscribe(onNext: {
+      print($0)
+  }).disposed(by: disposeBag)
+  //1, 2, 3, 4
+  ```
+
+- **Merge** : 두 개 이상의 Observable을 병합하고 모든 Observable에서 방출하는 요소들을 순서대로 방출.
+
+  ```swift
+  let left = PublishSubject<Int>()
+  let right = PublishSubject<Int>()
+  let source = Observable.of(left.asObservable(), right.asObserable())
+  let observable = source.merge()
+  observable.subscribe(onNext: {
+      print($0)
+  }).disposed(by: disposeBag)
+  
+  left.onNext(4)
+  left.onNext(2)
+  right.onNext(8)
+  right.onNext(5)
+  left.onNext(1)
+  // 4, 2, 8, 5, 1
+  ```
+
+- **CombineLatest** : 두 개의 sequence를 하나로 합침. subsequence에서 요소가 방출될 때마다 방출. 합쳐진 두 sequence는 요소를 조합하여 새로운 요소 방출.
+
+  subsequence가 각각 최초 요소를 방출해야 합쳐진 sequence에서 요소 방출.
+
+  ```swift
+  let left = PublishSubject<Int>()
+  let right = PublishSubject<Int>()
+  let source = Observable.combineLatest(left, right, resultSelector: { lastLeft, lastRight in
+      "\(lastLeft) \(lastRight)"
+  })
+  let disposable = observable.subscribe(onNext: { value in
+      print(value)
+  })
+  
+  left.onNext(45)
+  right.onNext(1)
+  left.onNext(30)
+  right.onNext(99)
+  right.onNext(2)
+  // 45 1, 30 1, 30 99, 30 2
+  ```
+
+- **WithLastestFrom** : trigger가 방출을 했을 때 특정 상태의 최신 값을 얻고 싶을 때 사용
+
+  ```swift
+  let button = PublishSubject<Void>()
+  let textfield = PublishSubject<String>()
+  let observable = button.withLastestFrom(textfield)
+  let disposable = observable.subscribe(onNext: {
+      print($0)
+  })
+  textField.onNext("Sw")
+  textField.onNext("Swif")
+  textField.onNext("Swift ")
+  textField.onNext("Swift Rocks!")
+  
+  button.onNext(())
+  button.onNext(())
+  //Swift Rocks!, Swift Rocks!
+  ```
+
+- **Reduce** 
+
+  ```swift
+  let source = Observable.of(1,2,3)
+  source.reduce(0, accumulator: +)
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  // 6
+  ```
+
+  
+
+- **Scan** : 이전에 방출된 요소의 값과 방출할 요소의 값을 합쳐 방출.
+
+  ```swift
+  let source = Observable.of(1,2,3)
+  source.scan(0, accumulator: +)
+      .subscribe(onNext: {
+          print($0)
+      }).disposed(by: disposeBag)
+  //1, 3, 6
+  ```
+
+  
