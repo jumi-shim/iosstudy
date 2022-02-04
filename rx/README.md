@@ -118,6 +118,10 @@ observable.subscribe(onNext: { element in
 
 
 
+### Observable 구독 - drive
+
+Traits. UI와 함께 사용되도록 독점적으로 생성된 observable 항목의 특수한 구현을 제공. 메인 스케줄러에서 관찰 구독. Driver, ControlProperty 등 포함.
+
 ### Observable 구독 취소 - Disposing
 
 - **dispose**
