@@ -120,6 +120,8 @@ Model - View - ViewModel
 - **ViewModel**
 
   앱의 핵심적인 비즈니스 로직. MVC 패턴의 Controller와 비슷한 역할. View로부터 전달받는 요청을 해결할 비즈니스 로직. UI 관련 코드로부터 완전히 분리. 
+  
+  **View는 ViewModel을 바라만 보고 있음! ViewModel은 View에 대해 모름!!!**
 
 1. 사용자가 화면에서 Action을 취하면 **Command Pattern**으로 View -> ViewModel로 전달됨.
 2. ViewModel이 Model에게 data 요청.

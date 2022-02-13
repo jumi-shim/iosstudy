@@ -394,3 +394,39 @@ App의 실행/종료 및 App이 foreground/background 상태에 있을 때 시�
 - 네비게이션 컨트롤러(스택구조)에서 첫 번째 뷰에서 두 번째 뷰로 넘어갔다가 다시 첫 번째 뷰로 돌아올 때 ?!
 
   1st viewWillDisappear -> 2nd viewDidLoad -> **2nd viewWillAppear -> 1st view Did Disappear -> 2nd viewDidAppear** -> 2nd viewWillDisppear -> **1st viewWillAppear**(viewDidLoad 호출 x) -> 2nd viewDidDisappear -> 1st viewDidAppear
+
+
+
+## 🖌 UIKit operations이 main thread에서만 동작해야 하는 이유
+
+1. UI와 관련된 모든 이벤트 처리를 main thread에서 함.
+
+   Cocoa Touch에서 UIApplication인 application의 인스턴스가 UIApplicationMain()(Cocoa Touch의 진입점 함수!!!)에 의해 만들어진 mian thread에 attach됨.
+
+   UIApplicationMain() 함수는 application object와 delegate를 만들고 이벤트 사이클을 설정함.
+
+   앱의 이벤트는 일반적으로 UIApplication -> UIWindow -> UIViewController -> UIView -> subviews(UILabel, UIButton 등)와 같이 chain을 따라 UIResponder에 전달됨.
+
+   Main Thread에서 Responders는 버튼 누리기, 탭 하기 등과 같은 이벤트를 처리하고 이것이 UI 변경으로 변환.  
+
+2. Main Thread가  View Drawing Cycle을 통해 View를 동시에 업데이트. 🧐
+
+   View Drawing Cycle로 뷰의 변경 사항은 즉시 변경되지 않고 현재 run loop 마지막에 다시 그려짐. 모든 변경 사항들을 동시에 활성화 시킬 수 있음.
+
+   만약에 BackGround Thread에서 run loop로 업데이트를 하게 되면 view가 제멋대로 동작.
+
+3. 성능 보호
+
+   UIKit은 모든 종류의 컴포넌트를 포함하며 사용자의 이벤트를 관리하고 **렌더링 코드 포함 하지 않음**
+
+   Core Animation이 모든 뷰의 그리기, 보여주기, 애니메이션을 담당.
+
+   Rendering Process는 CoreAnimation -> Render Server -> GPU -> Present로 이루어짐.
+
+   여러 Thread에서 UI를 업데이트하면 다른 뷰 계층 구조를 인코딩하여  Render Server로 전송하고 GPU는 많은 렌더링 요청으로 성능 저하.
+
+   -> 그래도 background에서 작업하고 싶다면 `Texture`,  `ComponentKit`과 같은 프레임워크 있음.
+
+
+
+## 🖌 App Bundle
