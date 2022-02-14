@@ -393,7 +393,7 @@ App의 실행/종료 및 App이 foreground/background 상태에 있을 때 시�
 
 - 네비게이션 컨트롤러(스택구조)에서 첫 번째 뷰에서 두 번째 뷰로 넘어갔다가 다시 첫 번째 뷰로 돌아올 때 ?!
 
-  1st viewWillDisappear -> 2nd viewDidLoad -> **2nd viewWillAppear -> 1st view Did Disappear -> 2nd viewDidAppear** -> 2nd viewWillDisppear -> **1st viewWillAppear**(viewDidLoad 호출 x) -> 2nd viewDidDisappear -> 1st viewDidAppear
+  1st viewWillDisappear -> 2nd viewDidLoad -> **2nd viewWillAppear -> 1st view Did Disappear -> 2nd viewDidAppear** -> 2nd viewWillDisppear -> **1st viewWillAppear**(viewDidLoad 호출 x. 네비게이션 컨트롤러의 root view.) -> 2nd viewDidDisappear -> 1st viewDidAppear
 
 
 
@@ -430,3 +430,61 @@ App의 실행/종료 및 App이 foreground/background 상태에 있을 때 시�
 
 
 ## 🖌 App Bundle
+
+앱이 정상적으로 작동하기 위해 필요한 모든 것들
+
+- Info.plist
+
+  앱에 대한 구성 configuration 정보(bundle ID, version number 등)를 포함한 파일
+
+- 실행파일 Excutable
+
+  모든 앱은 실행 가능 파일이 있어야 하고 앱의 메인 진입점과 정적으로 앱 타겟에 연결된 코드 포함.
+
+- Resources files
+
+  앱의 실행 가능한 파일 외부에 데이터 파일로 존재. 이미지, 아이콘, 사운드, nib 파일, 문자열 파일 등으로 구성.
+
+  Localized 된 파일은 lproj 확장자 파일.
+
+- 기타 서포트 파일
+
+  커스텀 데이터 리소스 등.
+
+
+
+## 🖌 UIViewController
+
+모든 view controller 객체의 상위 클래스. 
+
+직접 UIViewController의 객체를 만드는 경우는 없는 대신 뷰 계층을 관리하는데에 필요한 메서드와 속성 이용 가능.
+
+- View Controller의 역할
+  - 뷰와 사용자 상호 작용에 응답. 
+  - 기본 데이터 변경에 대한 응답으로 뷰의 콘텐츠 업데이트.
+  - 앱에서 다른 뷰 컨트롤러를 포함한 다른 객체와 조정.
+  - 뷰 크기 조정 및 전체 인터페이스의 레이아웃 관리.
+
+View controller는 UIResponder 객체이며 다른 view controller에 속하는 view controller의 루트 뷰와 해당 뷰의 super view 사이의 responder chain에 삽입 됨.
+
+### View Managemnet
+
+각 view controller는 view의 계층 구조를 관리.
+
+루트 뷰는 해당 클래스의 view property에 저장됨. 루트 뷰는 나머지 보기 계층 구조에 대한 컨테이너 역할을 함. 루트 뷰의 크기와 위치는 view controller나 앱의  window인 루트 뷰를 소유한 객체에 의해 결정됨.
+
+⭐️ view controller는 뷰와 vc이 생성하는 모든 하위 뷰의 유일한 소유자. 때문에 view controller가 해제될 때와 같이 적절한 시점에 뷰를 생성하고 소유권을 포기하는 책임이 있음. 그래서 뷰 객체를 저장하게 되면  vc이 요청하면 각 vc 객체는 자동으로 그들의 뷰의 복사본을 갖게됨. 그러나 만약 뷰를 수동으로 생성하는 경우에는 각 vc에 고유한 뷰 set이 있어야 하고 vc 간에 공유할 수 없음.
+
+### Handling View-Related Notification
+
+뷰가 변화되면 vc는 자동으로 자신의 메소드를 호출(viewWillAppear() ..)하여 하위 클래스가 변경사항에 응답할 수 있음. -> 생명주기 확인
+
+### Handling View Rotations
+
+뷰의 회전은 vc의 뷰 크기 변경으로 처리됨. viewWillTransition() 이용. 인터페이스 방향이 변경되면 UIKit은 window의 루트 vc에서 이 메소드를 호출함. 그 vc은 자식 vc에게 알리고 vc 계층 구조 전체에 메시지 전파.
+
+### Implementing a Container View Controller
+
+custom UIViewController 하위 클래스는 컨테이너 vc 역할 가능.
+
+컨테이너 vc는 자식 vc의 콘텐츠 표시를 관리함.
