@@ -148,3 +148,99 @@ Model - View - ViewModel
 
 [참고](https://medium.com/hcleedev/ios-swiftui의-mvvm-패턴과-mvc와의-비교-8662c96353cc)
 
+
+
+## 🖌 Clean Architecture
+
+![img](https://blog.kakaocdn.net/dn/rgFxI/btqFK2Yz8oi/dprufN5ctDe1WQgQn3BgE0/img.png)
+
+
+
+- 가장 바깥쪽 원은 저수준의 구체적 상세 정보를 담고 안쪽으로 가면서 소프트웨어는 추상화 되고 고수준의 정책을 캡슐화 함. 
+- **안쪽의 원은 바깥쪽의 원에 대해 전혀 알지 못함.** 특히 바깥쪽의 원에서 선언된 어떠한 이름을 안쪽 원에서 참조해서는 안 됨. -> 소스 코드는 안쪽을 향해서만 의존. 바깥쪽 원의 어떠한 것도 안쪽에 영향 주면 안 됨.
+
+1. **Entities** Enterprise Business Rules
+
+   비즈니스 모델. 엔티티는 메서드를 갖는 객체일 수도 있고 데이터 구조와 함수의 집합일 수도 있음.
+
+2. **Use cases** Application Business Rules
+
+   애플리케이션 고유 비즈니스 규칙을 포함하며 시스템의 모든 유스케이스를 캡슐화하고 구현함.
+
+   엔티티로 부터의 혹은 엔티티에서의 데이터 흐름을 조합.
+
+   이 계층의 변경이 엔티티에 영향을 주지 않을 것을 기대하며 데이터베이스, UI 또는 공통의 프레임워크의 변경으로부터 영향받지 않을 것도 기대.
+
+3. **Controllers, Gateway, Prestenters** Interface Adapter
+
+   유스케이스와 엔티티에 있어 용이한 형식으로부터 데이터베이스나 웹 등 외부의 기능에 용이한 형식으로 데이터를 변환함.
+
+   Coordinator, ViewModel, ViewController
+
+4. **Devices, Web, UI DB External Interfaces** Frameworks & Drivers
+
+   데이터베이스나 웹 프레임워크 등 일반적으로 프레임워크나 도구로 구성됨. 
+
+   안쪽의 원과 통신할 연결 코드 이외에는 작성 안 함.
+
+   Network, CoreData
+
+
+
+## 🖌 Clean Architecture + MVVM
+
+![img](https://blog.kakaocdn.net/dn/yoKKQ/btqFKl5Y86D/3ZD7kkO3Nkw7FIZK9g8cDk/img.png)
+
+Domain > Interfaces > Repositories 에 있는 파일들은 모두 프로토콜.
+
+Data > Repositories 에 있는 파일들은 Domain > Interfaces > Repositories의 프로토콜들을 채택한 클래스들.
+
+![img](https://blog.kakaocdn.net/dn/bHEH6y/btqFKMhY1wf/Ted9svEN3OwQzwt1gij7ek/img.jpg)
+
+Repository는 Domain Layer와 Data Layer 중간쯤에 있음.
+
+![img](https://blog.kakaocdn.net/dn/bOX0P0/btqFK2q3TWe/Xi8TCdfPHkWd9XiZlZuDR0/img.png)
+
+
+
+1. **Domain**
+
+   Entities + Use Cases. 
+
+   다른 Layer들에게 어떠한 영향도 받지 않음. 다른 프로젝트에 의하여 재사용 될 수 있음.
+
+   Entities(비즈니스 모델), Use Cases, Repository Interfaces.
+
+2. **Presentation Layer**
+
+   Presenters + UI.
+
+   UI(UIViewControllers, SwiftUI Views), ViewModels(Presenters).
+
+   ViewModel은 하나 이상의 UseCases를 execute하기 때문에 Presentation Layer는 Domain Layer를 의존함.
+
+3. **Data Layer**
+
+   DB + API
+
+   Repository 프로토콜에 대한 구현(Repository Implementations)과 Data Sources.
+
+   Repository는 다른 Data Sources (로컬 DB, API)로부터 데이터를 처리하는 책임 있음.
+
+   Data Layer는 API 응답으로 받은 JSON Data를 Domain Layer에 있는 모델로 변환하는 작업이 있음. -> Data Layer는 Domain Layer 의존.
+
+
+
+![img](https://blog.kakaocdn.net/dn/MQ1R1/btqFKDrPxtp/pjv2GVcCJ7ubcfjq8ZxQkK/img.png)
+
+
+
+### Data Flow
+
+1. View(UI)는 ViewModel(Presenter)의 메소드를 콜.
+2. ViewModel은 UseCase를 실행함.
+3. UseCase는 User와 Repository로부터 데이터 조합.
+4. 각각의 Repository는 Remote Data(Network) 또는 Persistent DB storage Source 또는 In-memory Data (Remote or Cached)로부터 데이터를 가져옴.
+5. 정보는 다시 View(UI)로 흘러 (Information flows back to the View(UI)) 새로운 화면을 보게 됨.
+
+[참고](https://eunjin3786.tistory.com/207)
