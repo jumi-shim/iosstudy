@@ -58,6 +58,30 @@ __🧐 Design Pattern VS Architectural Pattern?__
 
 [참고](https://icksw.tistory.com/257)
 
+
+
+## 🖌 Repository Pattern
+
+비즈니스 로직과 데이터 레이어를 분리하고 중앙 집중 처리 방식을 통해 일관된 데이터와 로직을 제공해야 한다는 것. 데이터가 있는 여러 저장소(Local Data Source, Remote Data Source)를 추상화.
+
+Repository는 데이터 소스 레이어와 비즈니스 레이어 사이를 중재함. Repository를 통해 비즈니스 레이어는 데이터의 출처를 몰라도 됨.
+
+Repository는 데이터 소스에 쿼리를 날리거나 데이터를 다른 도메인에서 사용할 수 있도록 맵핑.
+
+![img](https://blog.kakaocdn.net/dn/c1hNsQ/btqDfCHHvR5/KC5OAAZEkzoHK3K6LblEn1/img.jpg)
+
+ViewModel이 여러 Repository를 공유하더라도 Interface를 통해 데이터의 일관성을 유지할 수 있음.
+
+데이터 저장소의 데이터를 캡슐화할 수 있음 -> 객체지향적 프로그래밍에 적합 ??
+
+단위 테스트를 통한 검증이 가능하고 객체 간의 결합도가 감소함.
+
+[참고1](https://medium.com/tiendeo-tech/ios-repository-pattern-in-swift-85a8c62bf436)
+
+[참고2](https://devming.medium.com/repository-pattern%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-255731577927)
+
+[참고3](https://vagabond95.me/posts/android-repository-pattern/)
+
 # 📍Architectural Pattern
 
 ## 🖌 MVC

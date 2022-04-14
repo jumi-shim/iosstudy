@@ -22,8 +22,6 @@ Reactive Programming은 하나의 패러다임일 뿐이므로 Rx를 사용하�
 
 이벤트를 비동기적으로 생성할 수 있는 대상. 계속해서 이벤트를 생성하는데 이러한 과정을 Emit이라 함.
 
-observable == observable sequence == sequence
-
 이벤트들은 숫자나 커스텀한 인스턴스 등과 같은 값을 가질 수 있고, 탭과 같은 제스처일 수도 있음.
 
 - **next**
@@ -144,7 +142,38 @@ Traits. UI와 함께 사용되도록 독점적으로 생성된 observable 항목
       .disposed(by: disposeBag)
   ```
 
-  
+
+
+
+
+
+## 🖌 Hot & Cold Observable
+
+- Hot Observable : 생성 즉시 방출. 나중에 구독한 observer는 중간부터 시퀀스 관찰. 
+
+  - 다른 구독자들에게 선택적 고려 가능 .. ?
+
+  - 마우스, 키보드, 시스템 이벤트에 주로 사용
+
+  - 멀티태스트 포함
+
+    - Cold Observable을 Hot Observable로 바꾸기 위해서는 publish, share 오퍼레이터 사용. or Subject 사용.
+
+      Subject는 Observable이면서 Observer. -> Observable처럼 구독할 수도 있고, Observer처럼 next, complete 메소드 직접 호출 가능.
+
+  - 구독 이전에는 연산 자원을 소모하지 않음.
+
+  - 스트림을 분기시키는 성질
+
+- Cold Observable : observer가 구독할 때까지 대기. 처음부터 전체 시퀀스를 볼 수 있음.
+
+  - 구독하는 시점부터 이벤트 생성하여 방출
+  - 웹 요청, 데이터베이스 쿼리 등이 사용.
+  - 스트림을 분기시키는 성질을 가지고 있지 않음. -> Cold Observable을 **여러번 구독하는 경우 각각 별도의 스트림이 생성**되고 할당됨.
+
+
+
+
 
 ## 🖌 Subject
 
