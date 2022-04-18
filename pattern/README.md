@@ -185,9 +185,13 @@ Model - View - ViewModel
 
 1. **Entities** Enterprise Business Rules
 
-   비즈니스 모델. 엔티티는 메서드를 갖는 객체일 수도 있고 데이터 구조와 함수의 집합일 수도 있음.
+   비즈니스 모델(Actor가 필요로 하는 데이터 모델). 엔티티는 메서드를 갖는 객체일 수도 있고 데이터 구조와 함수의 집합일 수도 있음.
+
+   특정 도메인에서 사용되는 struct 모델.
 
 2. **Use cases** Application Business Rules
+
+   Actor가 Entity를 원하는데, 이 값은 계산되거나 특정 로직에 의해 얻어지므로 Actor가 원하는 Entity를 얻어내고 있는 **로직** 의미.
 
    애플리케이션 고유 비즈니스 규칙을 포함하며 시스템의 모든 유스케이스를 캡슐화하고 구현함.
 
@@ -199,7 +203,7 @@ Model - View - ViewModel
 
    유스케이스와 엔티티에 있어 용이한 형식으로부터 데이터베이스나 웹 등 외부의 기능에 용이한 형식으로 데이터를 변환함.
 
-   Coordinator, ViewModel, ViewController
+   Coordinator, ViewModel, ViewController, View, Behaviors(특정 View의 event에 관해 적용되는 UI).
 
 4. **Devices, Web, UI DB External Interfaces** Frameworks & Drivers
 
@@ -217,7 +221,7 @@ Model - View - ViewModel
 
 Domain > Interfaces > Repositories 에 있는 파일들은 모두 프로토콜.
 
-Data > Repositories 에 있는 파일들은 Domain > Interfaces > Repositories의 프로토콜들을 채택한 클래스들.
+**Data > Repositories 에 있는 파일들은 Domain > Interfaces > Repositories의 프로토콜들을 채택한 클래스들.**
 
 ![img](https://blog.kakaocdn.net/dn/bHEH6y/btqFKMhY1wf/Ted9svEN3OwQzwt1gij7ek/img.jpg)
 
@@ -227,13 +231,19 @@ Repository는 Domain Layer와 Data Layer 중간쯤에 있음.
 
 
 
+잘 변하는 것이 잘 변하지 않는 곳에 의존하는 것이 이상적.
+
+잘 변하지 않는 Domain 계층으로 Presentation Layer와 Data Layer가 의존.
+
+
+
 1. **Domain**
 
    Entities + Use Cases. 
 
    다른 Layer들에게 어떠한 영향도 받지 않음. 다른 프로젝트에 의하여 재사용 될 수 있음.
 
-   Entities(비즈니스 모델), Use Cases, Repository Interfaces.
+   Entities(비즈니스 모델), Use Cases, **Repository Interfaces**.
 
 2. **Presentation Layer**
 
@@ -247,7 +257,7 @@ Repository는 Domain Layer와 Data Layer 중간쯤에 있음.
 
    DB + API
 
-   Repository 프로토콜에 대한 구현(Repository Implementations)과 Data Sources.
+   Repository 프로토콜에 대한 구현(**Repository Implementations**)과 Data Sources.
 
    Repository는 다른 Data Sources (로컬 DB, API)로부터 데이터를 처리하는 책임 있음.
 
@@ -257,9 +267,7 @@ Repository는 Domain Layer와 Data Layer 중간쯤에 있음.
 
 ![img](https://blog.kakaocdn.net/dn/MQ1R1/btqFKDrPxtp/pjv2GVcCJ7ubcfjq8ZxQkK/img.png)
 
-
-
-### Data Flow
+##### Data Flow
 
 1. View(UI)는 ViewModel(Presenter)의 메소드를 콜.
 2. ViewModel은 UseCase를 실행함.
@@ -267,4 +275,35 @@ Repository는 Domain Layer와 Data Layer 중간쯤에 있음.
 4. 각각의 Repository는 Remote Data(Network) 또는 Persistent DB storage Source 또는 In-memory Data (Remote or Cached)로부터 데이터를 가져옴.
 5. 정보는 다시 View(UI)로 흘러 (Information flows back to the View(UI)) 새로운 화면을 보게 됨.
 
-[참고](https://eunjin3786.tistory.com/207)
+[참고1](https://eunjin3786.tistory.com/207) [참고2](https://ios-development.tistory.com/667?category=989887)
+
+
+
+#### DTO
+
+Data Transfer Object : JSON의 response를 Entity로 변환
+
+API로 부터 받은 response는 그대로 받고, response를 completion handler에서 domain 모델로 변환하는 식으로 사용.
+
+받은 response는 그대로 표출 > API의 response 모델을 알아보기 용이
+
+사용하는 쪽에서 domain 모델을 사용하도록 반환
+
+[참고](https://ios-development.tistory.com/668?category=989887)
+
+- DTO를 만드는 이유?
+
+  DTO를 두면 Model, Entity를 종속적이지 않게 만들 수 있음.
+
+  Data Layer를 통해 받는 데이터 응답이 달라질 때마다 DTO만 수정하면 되고 model은 수정하지 않아도 됨.
+
+
+
+#### 🤔 ViewModel VS UseCase
+
+ViewModel에 비즈니스 로직을 넣는 경우는 잘못된 접근 :: 비즈니스 로직은 UseCase에 존재.
+
+ViewModel의 역할은 UI Event들이 발생하면 무엇을 해야하는지 알고 있는 것. 무엇을 해야하는지 알고있기 때문에 UseCase를 실행시키고 UI에 업데이트를 알리는 역할.
+
+비즈니스 로직은 앱에서 사용자와 상호작용이 아닌 업무 요구사항을 담고 있는 것. :: 개발팀 외부의 사업 부서 사람도 알고 있어야 하는 로직.
+
